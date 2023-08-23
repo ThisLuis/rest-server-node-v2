@@ -1,4 +1,5 @@
 const { Router }   = require('express');
+const { check } = require('express-validator');
 const { 
     getUsers,
     putUsers,
@@ -14,7 +15,9 @@ router.get('/', getUsers);
 
 router.put('/:id', putUsers);
 
-router.post('/', postUsers)
+router.post('/',[
+    check('email', 'el email no es valido').isEmail(),
+] ,postUsers)
 
 router.delete('/', deleteUsers)
 
