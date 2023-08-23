@@ -1,5 +1,8 @@
 const { response } = require('express');
 
+// Models
+const User = require('../models/user');
+
 
 // query params
 const getUsers = (req, res = response) => {
@@ -15,15 +18,15 @@ const getUsers = (req, res = response) => {
 }
 
 // body
-const postUsers = (req, res = response) => {
+const postUsers = async(req, res = response) => {
 
-    const { name, age } = req.body;
+  const dataUser = req.body;
+  const user = new User(dataUser);
+  await user.save();
 
-    res.json({
-        msg: "post API- controller",
-        name,
-        age
-    })
+  res.status(201).json({
+    user,
+  })
 }
 
 // parametros de segmento
