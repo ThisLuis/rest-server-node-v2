@@ -12,12 +12,12 @@ const router = Router();
 
 router.get('/', getUsers);
 
-router.put('/put', putUsers);
+router.put('/:id', putUsers);
 
-router.post('/post', postUsers)
+router.post('/', postUsers)
 
-router.delete('/delete', deleteUsers)
+router.delete('/', deleteUsers)
 
-router.patch('/patch', patchUsers)
+router.patch('/', patchUsers)
 
 module.exports = router;
