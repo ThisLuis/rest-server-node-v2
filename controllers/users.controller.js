@@ -7,15 +7,17 @@ const User = require('../models/user');
 
 
 // query params
-const getUsers = (req, res = response) => {
+const getUsers = async(req, res = response) => {
 
-    const { q, type_user, apikey, user = 'no user x-x' } = req.query;
+    // const { q, type_user, apikey, user = 'no user x-x' } = req.query;
+    const { from = 0, limit = 5 } = req.query;
+    const users = await User.find()
+        .skip(Number(from))
+        .limit(Number(limit));
+
 
     res.json({
-        msg: " get API - controller",
-        q,
-        type_user,
-        apikey
+        users
     })
 }
 
@@ -43,7 +45,8 @@ const putUsers = async(req, res = response) => {
 
 
     const { id } = req.params;
-    const { password, google, email, ...rest } = req.body;
+    const { _id, password, google, email, ...rest } = req.body;
+    console.log(rest);
 
     if( password ) {
         const salt = bcryptjs.genSaltSync();
@@ -53,10 +56,7 @@ const putUsers = async(req, res = response) => {
 
     const user = await User.findByIdAndUpdate( id, rest );
 
-    res.json({
-        msg: "put API- controller",
-        user
-    })
+    res.json(user);
 }
 const patchUsers = (req, res = response) => {
     res.json({

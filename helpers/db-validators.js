@@ -16,7 +16,16 @@ const existsEmail = async(email) => {
 
 }
 
+const existsUserById = async( id ) => {
+  const existsUser = await User.findById( id );
+  if(!existsUser ) {
+    throw new Error(`El id ${ id } no existe en la bd`);
+  }
+}
+
+
 module.exports = {
+    existsEmail,
+    existsUserById,
     isValidRole,
-    existsEmail
 }
