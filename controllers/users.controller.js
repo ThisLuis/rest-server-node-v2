@@ -25,14 +25,7 @@ const postUsers = async(req, res = response) => {
   const { name, email, password, role } = req.body;
   const user = new User({ name, email, password, role });
 
-  // Verificar si el email existe
-  const existsEmail = await User.findOne({ email });
-  if( existsEmail ) {
-    return res.status(400).json({
-        msg: 'Este correo ya existe'
-    });
-  }
-
+  
   // Encriptar la contraseña
   const salt = bcryptjs.genSaltSync();
   user.password = bcryptjs.hashSync( password, salt);
@@ -46,13 +39,23 @@ const postUsers = async(req, res = response) => {
 }
 
 // parametros de segmento
-const putUsers = (req, res = response) => {
+const putUsers = async(req, res = response) => {
 
-    const id = req.params.id;
+
+    const { id } = req.params;
+    const { password, google, email, ...rest } = req.body;
+
+    if( password ) {
+        const salt = bcryptjs.genSaltSync();
+        rest.password = bcryptjs.hashSync( password, salt );
+
+    }
+
+    const user = await User.findByIdAndUpdate( id, rest );
 
     res.json({
         msg: "put API- controller",
-        "id": id
+        user
     })
 }
 const patchUsers = (req, res = response) => {
