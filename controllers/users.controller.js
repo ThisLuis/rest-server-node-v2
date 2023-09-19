@@ -72,12 +72,15 @@ const patchUsers = (req, res = response) => {
 }
 const deleteUsers = async(req, res = response) => {
     const { id } = req.params;
+
+    const uid = req.uid;
     // delete phisical
     // const user = await User.findByIdAndDelete( id );
 
     const user = await User.findByIdAndUpdate(id, { status: false });
     res.json({
-        user
+        user,
+        uid
     })
 }
 

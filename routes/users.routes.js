@@ -8,6 +8,8 @@ const { existsEmail,
         existsUserById
 } = require('../helpers/db-validators');
 
+const { validateJWT } = require('../middlewares/validate-jwt');
+
 const { 
     getUsers,
     putUsers,
@@ -40,10 +42,11 @@ router.post('/',[
 ] ,postUsers)
 
 router.delete('/:id', [
+    validateJWT,
     check('id', 'No es un ID valido de mongo').isMongoId(),
     check('id').custom( existsUserById ),
     validateFields
-],deleteUsers)
+], deleteUsers);
 
 router.patch('/', patchUsers)
 
