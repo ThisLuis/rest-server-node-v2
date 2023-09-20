@@ -65,11 +65,13 @@ const putUsers = async(req, res = response) => {
 
     res.json(user);
 }
+
 const patchUsers = (req, res = response) => {
     res.json({
         msg: "patch API- controller"
     })
 }
+
 const deleteUsers = async(req, res = response) => {
     const { id } = req.params;
 
@@ -78,9 +80,12 @@ const deleteUsers = async(req, res = response) => {
     // const user = await User.findByIdAndDelete( id );
 
     const user = await User.findByIdAndUpdate(id, { status: false });
+    const userAuth = req.user;
+
     res.json({
         user,
-        uid
+        uid,
+        userAuth
     })
 }
 
