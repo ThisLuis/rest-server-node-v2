@@ -9,14 +9,18 @@ const uploadFiles = async( req, res = response ) => {
     return
   }
 
-  // const fullPath = await uploadFile( req.files );
-  const name = await uploadFile( req.files );
+  
+  try {
+    // const fullPath = await uploadFile( req.files );
+    // const name = await uploadFile( req.files, ['md', 'txt'], 'textos' );
+    const name = await uploadFile( req.files, undefined, 'images' );
+    res.json(name);
+  } catch( msg ) {
+    res.status(400).json(msg);
+  }
   
 
-  res.json({
-    name,
-  })
-
+ 
 }
 
 module.exports = {
