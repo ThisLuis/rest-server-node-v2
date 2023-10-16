@@ -66,7 +66,52 @@ const updateImage = async(req, res = response) => {
 
 };
 
+const showImage = async(req, res = response) => {
+
+
+  const { id, collection } = req.params;
+  let model;
+
+  switch( collection) {
+    case 'users':
+      model = await User.findById(id);
+      if ( !model ) {
+        return res.status(400).json({
+          msg: `Don't exists user with id: ${ id }`
+        })
+      }
+    break;
+
+    case 'products':
+      model = await Product.findById( id );
+      if ( !model ) {
+        return res.status(400).json({
+          msg: `Don't exists prodcut with id: ${ id }`
+        })
+      }
+    break;
+
+    default:
+      return res.status(400).json({msg: 'No valide esto'})
+  }
+
+  // Clean previous images
+  if (model.image ) {
+    // delete server image
+    const pathImage = path.join( __dirname, '../uploads', collection, model.image );
+    if ( fs.existsSync( pathImage ) ) {
+      return res.send( pathImage );
+    }
+  }
+
+
+  const placeholderImage = path.join( __dirname, '../assets/no-image.jpg');
+  console.log(placeholderImage);
+  res.sendFile( placeholderImage )
+}
+
 module.exports = {
   uploadFiles,
-  updateImage
+  updateImage,
+  showImage
 };
