@@ -1,15 +1,10 @@
 const { response } = require('express');
 
 const { uploadFile } = require('../helpers');
+const { Product, User } = require('../models');
 
 const uploadFiles = async( req, res = response ) => {
 
-  if ( !req.files || Object.keys(req.files).length === 0 || !req.files.file ) {
-    res.status(400).json({msg: 'No viene el archivo'});
-    return
-  }
-
-  
   try {
     // const fullPath = await uploadFile( req.files );
     // const name = await uploadFile( req.files, ['md', 'txt'], 'textos' );
@@ -26,8 +21,37 @@ const uploadFiles = async( req, res = response ) => {
 const updateImage = async(req, res = response) => {
   
   const { id, collection } = req.params;
-  
-  res.json({ id, collection });
+  let model;
+
+  switch( collection) {
+    case 'users':
+      model = await User.findById(id);
+      if ( !model ) {
+        return res.status(400).json({
+          msg: `Don't exists user with id: ${ id }`
+        })
+      }
+    break;
+
+    case 'products':
+      model = await Product.findById( id );
+      if ( !model ) {
+        return res.status(400).json({
+          msg: `Don't exists prodcut with id: ${ id }`
+        })
+      }
+    break;
+
+    default:
+      return res.status(400).json({msg: 'No valide esto'})
+  }
+
+  const name = await uploadFile( req.files, undefined, collection );
+  model.image = name;
+  await model.save();
+
+
+  res.json(model);
 
 };
 
